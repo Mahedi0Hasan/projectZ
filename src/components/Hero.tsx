@@ -1,9 +1,15 @@
+import type { MouseEvent } from "react";
 import Chars from "./Chars";
 import LensCard from "./LensCard";
 import { ArrowUpRight } from "./Icons";
 import s from "./Hero.module.css";
 
-export default function Hero() {
+type HeroProps = {
+  /** Shopify mode: "Discover more" scrolls to the theme section that follows, not to #clarity. */
+  onDiscover?: (e: MouseEvent<HTMLAnchorElement>) => void;
+};
+
+export default function Hero({ onDiscover }: HeroProps) {
   return (
     <section id="top" className={s.hero}>
       <h1 className={s.headline} aria-label="See Beyond What’s Unclear" data-reveal="headline">
@@ -34,7 +40,7 @@ export default function Hero() {
 
       <LensCard />
 
-      <a href="#clarity" className={s.discover} data-reveal="discover">
+      <a href="#clarity" className={s.discover} data-reveal="discover" onClick={onDiscover}>
         <span className={s.discoverPill} aria-hidden="true">
           ↓
         </span>

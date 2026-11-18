@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import gsap from "gsap";
 import { loadImages } from "../lib/loadImages";
 import Scene from "./Scene";
@@ -71,7 +71,7 @@ const unlockScroll = () => {
 
 type PageProps = {
   /** Shopify mode: no nav of its own, and every query stays inside `scope`. */
-  embedded?: boolean;
+  embedded?: boolean; // also leaves out section 2 and its tiles
   scope?: Element;
 };
 
@@ -325,6 +325,16 @@ export default function Page({ embedded = false, scope }: PageProps) {
     };
   }, [unlocked, reduced]);
 
+  // Shopify mode has no section 2: "Discover more" goes to the theme's next section.
+  const scrollPastSection = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const host = scope?.closest(".shopify-section") ?? scope;
+    const next = host?.nextElementSibling ?? null;
+    const behavior = reduced ? "auto" : "smooth";
+    if (next) next.scrollIntoView({ behavior });
+    else if (host) window.scrollTo({ top: host.getBoundingClientRect().bottom + window.scrollY, behavior });
+  };
+
   const showPreloader = !reduced && !failed && !preloaderDone;
 
   return (
@@ -339,8 +349,8 @@ export default function Page({ embedded = false, scope }: PageProps) {
       />
       {!embedded && <Nav theme={theme} />}
       <main>
-        <Hero />
-        <Clarity sectionRef={clarityRef} />
+        <Hero onDiscover={embedded ? scrollPastSection : undefined} />
+        {!embedded && <Clarity sectionRef={clarityRef} />}
       </main>
       {showPreloader && <Preloader assets={preAssets} state={stateRef} onWiped={onWiped} />}
     </>
