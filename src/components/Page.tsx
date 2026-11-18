@@ -35,6 +35,10 @@ const T = {
   discover: 1.95,
   ring: 2.1,
 };
+const RING_TIME = 1.2;
+const INTRO_HOLD = 1.5; // s the finished hero stays on screen before the Shopify intro fades away
+const INTRO_FADE = 0.8;
+const SKIP_FADE = 0.4;
 
 const CHAR_FROM = { opacity: 0, filter: "blur(18px)", xPercent: -30 };
 const CHAR_TO = {
@@ -73,9 +77,13 @@ type PageProps = {
   /** Shopify mode: no nav of its own, and every query stays inside `scope`. */
   embedded?: boolean; // also leaves out section 2 and its tiles
   scope?: Element;
+  /** Shopify intro mode: the hero plays full screen, then fades and calls this to remove itself. */
+  onIntroEnd?: () => void;
 };
 
-export default function Page({ embedded = false, scope }: PageProps) {
+export default function Page({ embedded = false, scope, onIntroEnd }: PageProps) {
+  const introEndRef = useRef(onIntroEnd);
+  const isIntro = Boolean(onIntroEnd);
   const [reduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const stateRef = useRef<LoadState>({ loaded: 0, ready: false, shown: 0, expand: 1 });
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -96,6 +104,15 @@ export default function Page({ embedded = false, scope }: PageProps) {
   // without the preloader (reduced motion or a failed load), the page shows as soon as it can
   const plain = (reduced || failed) && (ready || failed);
   const unlocked = introDone || plain;
+
+  useEffect(() => {
+    introEndRef.current = onIntroEnd;
+  }, [onIntroEnd]);
+
+  // intro mode: a failed load ends the intro at once, showing the store's home page
+  useEffect(() => {
+    if (failed) introEndRef.current?.();
+  }, [failed]);
 
   // M0 · loading
   useEffect(() => {
@@ -206,7 +223,7 @@ export default function Page({ embedded = false, scope }: PageProps) {
           ease: "power2.in",
           onComplete: () => {
             setPreloaderDone(true);
-            unlockScroll();
+            if (!introEndRef.current) unlockScroll();
             setIntroDone(true);
           },
         },
@@ -238,13 +255,20 @@ export default function Page({ embedded = false, scope }: PageProps) {
           v,
           {
             n: SCORE,
-            duration: 1.2,
+            duration: RING_TIME,
             ease: "power2.out",
             onUpdate: () => {
               ring.style.strokeDasharray = `${(RING_LENGTH * v.n) / 100} ${RING_LENGTH}`;
             },
           },
           T.ring,
+        );
+      }
+      if (introEndRef.current && scope) {
+        tl.to(
+          scope,
+          { opacity: 0, duration: INTRO_FADE, ease: "power1.inOut", onComplete: () => introEndRef.current?.() },
+          T.ring + RING_TIME + INTRO_HOLD,
         );
       }
     }, scope);
@@ -335,6 +359,13 @@ export default function Page({ embedded = false, scope }: PageProps) {
     else if (host) window.scrollTo({ top: host.getBoundingClientRect().bottom + window.scrollY, behavior });
   };
 
+  // intro mode: "Discover more" skips straight to the store's home page
+  const skipIntro = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (!scope) return;
+    gsap.to(scope, { opacity: 0, duration: SKIP_FADE, ease: "power1.out", onComplete: () => introEndRef.current?.() });
+  };
+
   const showPreloader = !reduced && !failed && !preloaderDone;
 
   return (
@@ -349,7 +380,7 @@ export default function Page({ embedded = false, scope }: PageProps) {
       />
       {!embedded && <Nav theme={theme} />}
       <main>
-        <Hero onDiscover={embedded ? scrollPastSection : undefined} />
+        <Hero onDiscover={isIntro ? skipIntro : embedded ? scrollPastSection : undefined} />
         {!embedded && <Clarity sectionRef={clarityRef} />}
       </main>
       {showPreloader && <Preloader assets={preAssets} state={stateRef} onWiped={onWiped} />}

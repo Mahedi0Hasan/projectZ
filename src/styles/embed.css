@@ -3,9 +3,15 @@
    `.lucid-root :where(…)` weighs one class: it beats the theme's element rules
    (p, h1, button) and loses to the component classes, which come later. */
 .lucid-root {
-  position: relative;
+  /* a full-screen intro over the theme (header included) until it fades and removes itself */
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   isolation: isolate;
-  clip-path: inset(0); /* keeps the fixed field, tiles and preloader inside this section */
+  clip-path: inset(0); /* keeps the fixed field and preloader inside the intro */
   background: var(--night);
   color: var(--white);
   font-family: var(--font-sans);

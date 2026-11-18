@@ -4,13 +4,33 @@ import "./styles/tokens.css"; // rewritten to `.lucid-root` in the Shopify build
 import "./styles/embed.css";
 import Page from "./components/Page";
 
-// Shopify entry: mounts lucid inside the theme's `lucid` section, leaving the rest of the page alone.
+// Shopify entry: plays lucid's hero as a full-screen intro over the theme's home page,
+// then removes itself. The section's inline script has already removed the element for
+// returning visitors, reduced motion and the theme editor.
+const SEEN_KEY = "lucid-intro-seen";
 const el = document.querySelector<HTMLElement>("[data-lucid]");
+
 if (el) {
-  el.classList.add("lucid-root");
-  createRoot(el).render(
+  const root = createRoot(el);
+  let ended = false;
+  const end = () => {
+    if (ended) return;
+    ended = true;
+    try {
+      localStorage.setItem(SEEN_KEY, "1");
+    } catch {
+      // storage blocked: the intro simply plays again next time
+    }
+    setTimeout(() => {
+      root.unmount();
+      el.remove();
+      document.documentElement.style.overflow = "";
+      window.scrollTo(0, 0);
+    }, 0);
+  };
+  root.render(
     <StrictMode>
-      <Page embedded scope={el} />
+      <Page embedded scope={el} onIntroEnd={end} />
     </StrictMode>,
   );
 }

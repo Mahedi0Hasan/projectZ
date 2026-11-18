@@ -1,20 +1,44 @@
 {%- comment -%}
-  lucid: the misted-glass intro, sunrise and tile reveal, as one home-page section.
-  Everything it draws stays inside this section; the rest of the theme is untouched.
+  lucid intro: the misted-glass wipe, the sunrise and the lens card play full screen
+  over the home page, then fade away and leave the theme's own home page. It shows once
+  per visitor (localStorage), never with reduced motion, and never in the theme editor.
 {%- endcomment -%}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@1&display=swap">
-<link rel="preload" as="fetch" crossorigin href="https://assets.uberdesigner.ai/lucid/night.webp">
-<link rel="preload" as="fetch" crossorigin href="https://assets.uberdesigner.ai/lucid/hand.webp">
-<link rel="preload" as="fetch" crossorigin href="https://assets.uberdesigner.ai/lucid/day.webp">
-{{ 'lucid-embed.css' | asset_url | stylesheet_tag }}
-<div data-lucid></div>
-<script type="module" src="{{ 'lucid-embed.js' | asset_url }}"></script>
+{%- unless request.design_mode -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@1&display=swap">
+  {{ 'lucid-embed.css' | asset_url | stylesheet_tag }}
+  <div class="lucid-root" data-lucid></div>
+  <script>
+    (function () {
+      var el = document.querySelector('[data-lucid]');
+      var seen = false;
+      try { seen = localStorage.getItem('lucid-intro-seen') === '1'; } catch (e) {}
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (seen || reduced) {
+        el.remove();
+        return;
+      }
+      document.documentElement.style.overflow = 'hidden';
+      ['night', 'hand', 'day'].forEach(function (name) {
+        var link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'fetch';
+        link.crossOrigin = 'anonymous';
+        link.href = 'https://assets.uberdesigner.ai/lucid/' + name + '.webp';
+        document.head.appendChild(link);
+      });
+      var script = document.createElement('script');
+      script.type = 'module';
+      script.src = {{ 'lucid-embed.js' | asset_url | json }};
+      document.body.appendChild(script);
+    })();
+  </script>
+{%- endunless -%}
 
 {% schema %}
 {
-  "name": "lucid",
-  "presets": [{ "name": "lucid" }]
+  "name": "lucid intro",
+  "presets": [{ "name": "lucid intro" }]
 }
 {% endschema %}
