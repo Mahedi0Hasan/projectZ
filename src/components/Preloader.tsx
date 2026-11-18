@@ -144,7 +144,7 @@ export default function Preloader({ assets, state, onWiped }: Props) {
     const ctx = canvas.getContext("2d")!;
     const length = svgPath.getTotalLength();
     const stroke = new Path2D(PATH);
-    const tint = getComputedStyle(document.documentElement).getPropertyValue("--fog-tint").trim();
+    const tint = getComputedStyle(canvas).getPropertyValue("--fog-tint").trim();
 
     const f = { s: 1, ox: 0, oy: 0 };
     let fogBase: HTMLCanvasElement | null = null;

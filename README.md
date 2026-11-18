@@ -36,3 +36,7 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 `shopify/` holds the files that turn this site into the home page of a Shopify theme:
 `layout/lucid.liquid`, `sections/lucid.liquid`, `templates/index.json` and the built
 `assets/lucid.js` + `assets/lucid.css`. Rebuild the assets with `npm run build:shopify`.
+
+`shopify-embed/` is the same site as one section (`sections/lucid.liquid`) for an existing
+theme: no nav of its own, tokens and base styles scoped to `.lucid-root`, and the fixed
+field and preloader clipped to the section. Rebuild its assets with `npm run build:embed`.

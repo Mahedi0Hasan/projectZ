@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "build:shopify": "npm run build && node scripts/shopify.mjs"
+    "build:shopify": "npm run build && node scripts/shopify.mjs",
+    "build:embed": "tsc -b && vite build --mode shopify && cp dist-shopify/assets/* shopify-embed/assets/"
   },
   "dependencies": {
     "gsap": "3.15",

@@ -1,0 +1,21 @@
+{%- comment -%}
+  lucid: the misted-glass intro, sunrise and tile reveal, as one home-page section.
+  Everything it draws stays inside this section; the rest of the theme is untouched.
+{%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@1&display=swap">
+<link rel="preload" as="fetch" crossorigin href="https://assets.uberdesigner.ai/lucid/night.webp">
+<link rel="preload" as="fetch" crossorigin href="https://assets.uberdesigner.ai/lucid/hand.webp">
+<link rel="preload" as="fetch" crossorigin href="https://assets.uberdesigner.ai/lucid/day.webp">
+{{ 'lucid-embed.css' | asset_url | stylesheet_tag }}
+<div data-lucid></div>
+<script type="module" src="{{ 'lucid-embed.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "lucid",
+  "settings": [],
+  "presets": [{ "name": "lucid" }]
+}
+{% endschema %}

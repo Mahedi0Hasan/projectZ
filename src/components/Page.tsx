@@ -69,7 +69,13 @@ const unlockScroll = () => {
   document.documentElement.style.overflow = "";
 };
 
-export default function Page() {
+type PageProps = {
+  /** Shopify mode: no nav of its own, and every query stays inside `scope`. */
+  embedded?: boolean;
+  scope?: Element;
+};
+
+export default function Page({ embedded = false, scope }: PageProps) {
   const [reduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const stateRef = useRef<LoadState>({ loaded: 0, ready: false, shown: 0, expand: 1 });
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -171,10 +177,10 @@ export default function Page() {
     const ctx = gsap.context(() => {
       if (sceneRef.current) gsap.set(sceneRef.current, { "--sun": 1 });
       gsap.to('[data-reveal]:not([data-reveal^="clarity"])', { opacity: 1, duration: 0.4, ease: "power1.out" });
-    });
+    }, scope);
     unlockScroll();
     return () => ctx.revert();
-  }, [reduced, failed, ready]);
+  }, [reduced, failed, ready, scope]);
 
   const onWiped = useCallback(() => setWiped(true), []);
 
@@ -183,7 +189,7 @@ export default function Page() {
     if (!wiped) return;
     const st = stateRef.current;
     const ctx = gsap.context(() => {
-      const q = (sel: string) => document.querySelector(sel);
+      const q = (sel: string) => (scope ?? document).querySelector(sel);
       const ring = q("[data-ring]") as SVGCircleElement | null;
       const tl = gsap.timeline();
 
@@ -241,9 +247,9 @@ export default function Page() {
           T.ring,
         );
       }
-    });
+    }, scope);
     return () => ctx.revert();
-  }, [wiped]);
+  }, [wiped, scope]);
 
   // M3 · nav theme and M4 · section 2 reveal
   useEffect(() => {
@@ -331,7 +337,7 @@ export default function Page() {
         rootRef={sceneRef}
         glowRef={glowRef}
       />
-      <Nav theme={theme} />
+      {!embedded && <Nav theme={theme} />}
       <main>
         <Hero />
         <Clarity sectionRef={clarityRef} />
