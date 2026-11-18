@@ -1,0 +1,72 @@
+/* All design tokens. Type sizes, the edge, the column and radii are unitless design px:
+   components multiply them by var(--u) (or var(--cu) inside a stat card). */
+:root {
+  /* colors */
+  --night: #02071c;
+  --white: #ffffff;
+  --ink: #161616;
+  --graphite: #3b3b3b;
+  --sky: #7fb5e8;
+  --blue: #40a3ff;
+  --blue-deep: #006fff;
+  --blue-pale: #a6d4ff;
+  --card-top: #f6f6f6;
+  --card-bottom: #eaeaea;
+  --muted: #898989;
+  --rule: #888888;
+  --glass: rgba(102, 102, 102, 0.3);
+  --glass-button: rgba(255, 255, 255, 0.15);
+  --shade: rgba(0, 0, 0, 0.15);
+  --fog-tint: rgba(217, 217, 217, 0.15);
+  --glow-core: rgba(255, 217, 200, 0.95);
+  --glow-edge: rgba(232, 160, 190, 0.45);
+
+  /* fonts */
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+
+  /* scale: 1 design px */
+  --u: min(100vw / 1440, 100svh / 800);
+
+  /* type sizes (design px) */
+  --fs-display: 115;
+  --fs-serif: 140;
+  --fs-body: 15.3;
+  --lh-body: 18.4;
+  --fs-discover: 17.2;
+  --fs-counter: 26;
+  --fs-stat-value: 75;
+  --fs-stat-text: 19.2;
+  --lh-stat-text: 23;
+  --fs-lens-index: 13.4;
+  --fs-lens-title: 16.8;
+  --fs-lens-score: 36.7;
+  --fs-lens-label: 10.7;
+  --fs-lens-metric: 13.8;
+  --lh-lens: 0.953;
+
+  /* tracking */
+  --tr-display: -0.04em;
+  --tr-serif: -0.02em;
+  --tr-body: -0.03em;
+  --tr-discover: -0.04em;
+  --tr-tight: -0.04em;
+
+  /* spacing and shape (design px, except the pill) */
+  --edge: 28;
+  --col: 331;
+  --radius-card: 28;
+  --radius-pill: 100px;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --u: min(100vw / 415, 100svh / 760);
+    --fs-display: 48;
+    --fs-serif: 58.5;
+    --edge: 20;
+  }
+}

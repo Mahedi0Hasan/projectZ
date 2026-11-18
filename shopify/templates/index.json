@@ -1,0 +1,10 @@
+{
+  "layout": "lucid",
+  "sections": {
+    "main": {
+      "type": "lucid",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

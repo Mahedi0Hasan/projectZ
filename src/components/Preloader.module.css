@@ -1,0 +1,93 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 1920 × 1080 comp, fitted like object-fit: cover by a transform set in JS */
+.comp {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+}
+
+.handOuter {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.hand {
+  position: relative;
+  width: 1084.6px;
+  height: 886.2px;
+  isolation: isolate;
+}
+
+.handImage {
+  width: 100%;
+  height: 100%;
+}
+
+.press {
+  position: absolute;
+  left: 241.7px;
+  top: 12.35px;
+  width: 98.4px;
+  height: 173.7px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.88);
+  filter: blur(6.7px);
+  mix-blend-mode: soft-light;
+}
+
+.counter {
+  position: absolute;
+  left: 50%;
+  bottom: calc(53 * var(--u));
+  transform: translateX(-50%);
+  color: var(--white);
+  font-size: calc(var(--fs-counter) * var(--u));
+  letter-spacing: var(--tr-body);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-box: trim-both cap alphabetic;
+}
+
+.num {
+  display: inline-block;
+  width: 3.35em;
+  text-align: center;
+}
+
+.path {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+@supports not (text-box: trim-both cap alphabetic) {
+  .counter {
+    margin: -0.15em 0 -0.14em;
+  }
+}

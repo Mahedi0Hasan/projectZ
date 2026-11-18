@@ -1,0 +1,112 @@
+.section {
+  position: relative;
+  z-index: 1;
+  height: max(100svh, calc(900 * var(--u)));
+  color: var(--graphite);
+}
+
+.headline {
+  position: absolute;
+  left: calc(var(--edge) * var(--u));
+  top: calc(172.55 * var(--u));
+  display: flex;
+  flex-direction: column;
+  gap: calc(32.35 * var(--u));
+  white-space: nowrap;
+}
+
+.line {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: calc(var(--fs-display) * var(--u));
+  letter-spacing: var(--tr-display);
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+}
+
+.serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: calc(var(--fs-serif) * var(--u));
+  letter-spacing: var(--tr-serif);
+  line-height: 0;
+}
+
+.sky {
+  color: var(--sky);
+}
+
+.text {
+  position: absolute;
+  right: calc(var(--edge) * var(--u));
+  top: calc(189 * var(--u));
+  width: calc(var(--col) * var(--u));
+  font-size: calc(var(--fs-body) * var(--u));
+  line-height: calc(var(--lh-body) * var(--u));
+  letter-spacing: var(--tr-body);
+  text-box: trim-both cap alphabetic;
+}
+
+.cards {
+  position: absolute;
+  left: calc(var(--edge) * var(--u));
+  right: calc(var(--edge) * var(--u));
+  bottom: calc(43 * var(--u));
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardWrap {
+  flex: 0 1 calc(448 * var(--u));
+  min-width: 0;
+}
+
+@supports not (text-box: trim-both cap alphabetic) {
+  .line {
+    margin: -0.15em 0 -0.14em;
+  }
+  .text {
+    margin-block: calc((var(--fs-body) * 0.355 - var(--lh-body) / 2) * var(--u));
+  }
+}
+
+@media (max-width: 1023px) {
+  .section {
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: calc(110 * var(--u)) calc(20 * var(--u)) calc(20 * var(--u));
+  }
+
+  .headline,
+  .text,
+  .cards {
+    position: relative;
+    inset: auto;
+  }
+
+  .headline {
+    gap: calc(13.5 * var(--u));
+  }
+
+  .text {
+    width: 100%;
+    margin-top: calc(28 * var(--u));
+  }
+
+  .cards {
+    width: 100%;
+    flex-direction: column;
+    gap: calc(20 * var(--u));
+    margin-top: calc(40 * var(--u));
+    container-type: inline-size;
+  }
+
+  .cardWrap {
+    flex: none;
+  }
+}
